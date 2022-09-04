@@ -1,0 +1,24 @@
+trigger:
+ - main
+
+variables:
+ - group: k8s
+
+pool: k8s
+
+steps:
+- script: |
+    set -euxo pipefail
+    docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog:latest" .
+    docker push "fnwicr.azurecr.io/minprog:latest"
+  displayName: Build Docker container
+  workingDirectory: ./docker
+
+- script: |
+    set -euxo pipefail
+    VERSION="0.${BUILD_BUILDNUMBER}"
+    NAME="minprog"
+    helm package --version "${VERSION}" --app-version "${VERSION}" "charts/${NAME}"
+    helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
+    curl "https://k8s.datanose.nl/gitops-updater?name=proglab-test&secret=${UPDATER_SECRET}&version=${VERSION}"
+  displayName: Build Helm chart and push to registry
