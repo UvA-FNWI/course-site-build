@@ -9,7 +9,7 @@ ENV RAILS_ENV=production
 RUN mkdir /app
 WORKDIR /app
 
-RUN git clone --branch openid-connect-auth --depth 1 https://github.com/stgm/course-site.git 
+RUN git clone --branch main --depth 1 https://github.com/stgm/course-site.git 
 
 WORKDIR /app/course-site
 
