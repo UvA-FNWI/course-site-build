@@ -22,3 +22,5 @@ steps:
     helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
     curl "https://k8s.datanose.nl/gitops-updater?name=proglab-test&secret=${UPDATER_SECRET}&version=${VERSION}"
   displayName: Build Helm chart and push to registry
+  env:
+    UPDATER_SECRET: $(DEPLOY_SECRET)
