@@ -9,6 +9,8 @@ ENV RAILS_ENV=production
 RUN mkdir /app
 WORKDIR /app
 
+ADD "https://api.github.com/repos/stgm/course-site/commits/main" last-commit
+
 RUN git clone --branch main --depth 1 https://github.com/stgm/course-site.git 
 
 WORKDIR /app/course-site
