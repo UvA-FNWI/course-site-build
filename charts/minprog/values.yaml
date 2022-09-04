@@ -1,0 +1,56 @@
+hostname: minprog.local
+ingressClass: nginx
+image: fnwicr.azurecr.io/minprog
+tag: latest
+
+secretKeyBase: secret
+
+oidc:
+  clientId: minprog.local
+  host: connect.test.surfconext.nl
+
+webdav:
+  base: https://webdev
+  user: user
+
+checkServer:
+  url: https://check
+
+mail: 
+  address: smtp.example.com
+  domain: domain.example
+  from: mail@example.nl
+
+github:
+  base: git://repo
+  branch: main
+
+database:
+  name: dbname
+  user: user
+  url: postgres://url
+
+storage:
+  account: account
+  container: container
+
+azure:
+  keyvaultName: keyvaultName
+  resourceGroup: resourceGroupName
+  subscriptionId: subscriptionId
+  tenantId: tenantId
+  clientId: clientId
+  identityName: identityName
+  secrets:
+    - name: minprog-db-password
+      key: DATABASE_PASSWORD
+    - name: minprog-oidc-secret
+      key: OIDC_CLIENT_SECRET
+    - name: minprog-secretbase
+      key: SECRET_KEY_BASE
+    - name: minprog-check-secret
+      key: CHECK_SERVER_SECRET
+    - name: minprog-plag-key
+      key: PLAG_SERVER_KEY
+    - name: minprog-storage-key
+      key: AZURE_STORAGE_ACCESS_KEY

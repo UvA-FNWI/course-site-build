@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minprog
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  selector:
+    matchLabels:
+      app: minprog
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: minprog
+        {{- if .Values.azure }}
+        aadpodidbinding: minprog-azure-kv
+        {{- end }}
+    spec:
+      containers:
+        - name: minprog
+          image: "{{ .Values.image }}:{{ .Values.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VERSION
+              value: "{{ .Chart.AppVersion }}"
+            - name: RAILS_ENV
+              value: production
+            - name: RAILS_LOG_TO_STDOUT
+              value: "true"
+            - name: OIDC_HOST
+              value: "{{ .Values.oidc.host }}"
+            - name: OIDC_CLIENT_ID
+              value: "{{ .Values.oidc.clientId }}"
+            - name: GITHUB_BASE
+              value: "{{ .Values.github.base }}"
+            - name: GITHUB_BRANCH
+              value: "{{ .Values.github.branch }}"
+            - name: MAILER_ADDRESS
+              value: "{{ .Values.mail.address }}"
+            - name: MAILER_DOMAIN
+              value: "{{ .Values.mail.domain }}"
+            - name: MAILER_FROM
+              value: "{{ .Values.mail.from }}"
+            - name: DATABASE_URL
+              value: "{{ .Values.database.url }}"
+            - name: DATABASE_NAME
+              value: "{{ .Values.database.name }}"
+            - name: DATABASE_USER
+              value: "{{ .Values.database.user }}"
+            - name: CHECK_SERVER_URL
+              value: "{{ .Values.checkServer.url }}"
+            - name: AZURE_STORAGE_ACCOUNT
+              value: "{{ .Values.storage.account }}"
+            - name: AZURE_STORAGE_CONTAINER
+              value: "{{ .Values.storage.container }}"
+          envFrom:
+            - secretRef:
+                name: minprog-secret
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/etc/secrets"
+              readOnly: true
+
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "minprog-secretproviderclass"
