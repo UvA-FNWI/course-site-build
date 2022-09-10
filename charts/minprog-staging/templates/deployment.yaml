@@ -30,6 +30,8 @@ spec:
               value: production
             - name: RAILS_LOG_TO_STDOUT
               value: "true"
+            - name: DISABLE_DATABASE_ENVIRONMENT_CHECK
+              value: 1
             - name: OIDC_HOST
               value: "{{ .Values.oidc.host }}"
             - name: OIDC_CLIENT_ID

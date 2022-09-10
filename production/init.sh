@@ -1,6 +1,6 @@
 #!/bin/sh
 
 
-rails db:setup
+rails db:prepare
 
 rails server -b 0.0.0.0
