@@ -15,7 +15,7 @@ WORKDIR /app/course-site
 
 COPY init.sh /app/course-site/
 
-RUN bundle install --deployment --without development
+RUN bundle install --without development
 
 RUN SECRET_KEY_BASE=dummyvalue bundle exec rake assets:precompile
 
