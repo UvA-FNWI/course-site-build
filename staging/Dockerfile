@@ -1,8 +1,6 @@
-FROM ruby:2.7.4-bullseye
+FROM ruby:3.1.2-bullseye
 
 RUN apt-get update && apt-get -y install libcurl4-openssl-dev libvips
-RUN curl -sSL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
 
 ENV RAILS_ENV=production
 
@@ -16,8 +14,6 @@ RUN git clone --branch staging --depth 1 https://github.com/stgm/course-site.git
 WORKDIR /app/course-site
 
 COPY init.sh /app/course-site/
-
-RUN gem install bundler:1.17.2
 
 RUN bundle install
 
