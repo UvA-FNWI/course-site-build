@@ -24,7 +24,7 @@ spec:
           ports:
             - containerPort: 3000
           env:
-            - name: VERSION
+            - name: COURSE_SITE_DEPLOYMENT_VERSION
               value: "{{ .Chart.AppVersion }}"
             - name: RAILS_ENV
               value: production
