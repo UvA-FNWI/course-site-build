@@ -1,24 +1,31 @@
-FROM ruby:3.1.2-bullseye
+FROM phusion/passenger-ruby31:2.3.1
 
-RUN apt-get update && apt-get -y install libcurl4-openssl-dev libvips
+# System update and application dependencies
+RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
+RUN apt-get -y install libcurl4-openssl-dev libvips
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV RAILS_ENV=production
-
-RUN mkdir /app
-WORKDIR /app
-
-ADD "https://api.github.com/repos/stgm/course-site/commits/staging" last-commit
-
-RUN git clone --branch staging --depth 1 https://github.com/stgm/course-site.git 
-
-WORKDIR /app/course-site
-
-COPY init.sh /app/course-site/
-
-RUN bundle install --without development
-
-RUN SECRET_KEY_BASE=dummyvalue bundle exec rake assets:precompile
-
 ENV RAILS_SERVE_STATIC_FILES=true
 
-ENTRYPOINT [ "/app/course-site/init.sh" ]
+# Application will be run as non-root user
+USER app
+
+# Get application from public repository
+WORKDIR /home/app
+ADD "https://api.github.com/repos/stgm/course-site/commits/staging" last-commit
+RUN git clone --branch staging --depth 1 https://github.com/stgm/course-site.git
+
+# Add production-specific configuration
+COPY --chown=app:app init.sh /home/app/course-site
+COPY --chown=app:app Passengerfile.json /home/app/course-site
+
+# Install Rails application dependencies
+WORKDIR /home/app/course-site
+RUN bundle config set --local without 'development'
+RUN bundle install
+
+# Compile application assets
+RUN SECRET_KEY_BASE=dummyvalue bundle exec rake assets:precompile
+
+ENTRYPOINT [ "/home/app/course-site/init.sh" ]
