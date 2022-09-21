@@ -1,6 +1,4 @@
 #!/bin/sh
 
-
-rails db:prepare
-
-rails server -b 0.0.0.0
+bin/rails db:prepare
+passenger start
