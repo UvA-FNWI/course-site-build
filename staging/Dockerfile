@@ -2,7 +2,7 @@ FROM phusion/passenger-ruby31:2.3.1
 
 # System update and application dependencies
 RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
-RUN apt-get -y install libcurl4-openssl-dev libvips
+RUN apt-get -y install libcurl4-openssl-dev libvips mupdf
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV RAILS_ENV=production
