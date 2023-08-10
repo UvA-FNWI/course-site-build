@@ -13,8 +13,8 @@ USER app
 
 # Get application from public repository
 WORKDIR /home/app
-ADD "https://api.github.com/repos/stgm/course-site/commits/main" last-commit
-RUN git clone --branch main --depth 1 https://github.com/stgm/course-site.git
+ADD "https://api.github.com/repos/stgm/course-site/commits/2022" last-commit
+RUN git clone --branch 2022 --depth 1 https://github.com/stgm/course-site.git
 
 # Add production-specific configuration
 COPY --chown=app:app init.sh /home/app/course-site
