@@ -1,5 +1,6 @@
 trigger:
  - main
+ - 2022-image
 
 pr: none
 
@@ -11,8 +12,8 @@ pool: k8s
 steps:
 - script: |
     set -euxo pipefail
-    docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog:latest" .
-    docker push "fnwicr.azurecr.io/minprog:latest"
+    docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog:2022" .
+    docker push "fnwicr.azurecr.io/minprog:2022"
   displayName: Build Docker container
   workingDirectory: ./production
 
