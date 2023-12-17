@@ -26,6 +26,8 @@ spec:
           env:
             - name: COURSE_SITE_DEPLOYMENT_VERSION
               value: "{{ .Chart.AppVersion }}"
+            - name: COURSE_SITE_DEPLOYMENT_VERSION_TAG
+              value: "{{ .Values.tag }}"
             - name: RAILS_ENV
               value: production
             - name: RAILS_LOG_TO_STDOUT
