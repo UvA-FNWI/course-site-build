@@ -1,0 +1,4 @@
+hostname: minprog-ide.local
+ingressClass: nginx
+tag: latest
+image: fnwicr.azurecr.io/minprog-ide

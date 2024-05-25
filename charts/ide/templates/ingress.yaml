@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minprog-ide-ingress
+  namespace: "{{ .Release.Namespace }}"
+  annotations:
+    kubernetes.io/ingress.class: "{{ .Values.ingressClass }}"
+    acme.cert-manager.io/http01-ingress-class: {{ .Values.ingressClass }}
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.hostname }}"
+  rules:
+    - host: "{{ .Values.hostname }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minprog-ide
+                port:
+                  number: 80
