@@ -29,7 +29,7 @@ jobs:
     env:
       UPDATER_SECRET: $(DEPLOY_SECRET)
 
-- job: minprog-ide
+- job: minprog_ide
   steps:
   - script: |
       set -euxo pipefail
