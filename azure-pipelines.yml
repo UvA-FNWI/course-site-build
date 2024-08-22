@@ -8,21 +8,43 @@ variables:
 
 pool: k8s
 
-steps:
-- script: |
-    set -euxo pipefail
-    docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog:latest" .
-    docker push "fnwicr.azurecr.io/minprog:latest"
-  displayName: Build Docker container
-  workingDirectory: ./production
+jobs:
+- job: minprog
+  steps:
+  - script: |
+      set -euxo pipefail
+      docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog:latest" .
+      docker push "fnwicr.azurecr.io/minprog:latest"
+    displayName: Build Docker container
+    workingDirectory: ./production
 
-- script: |
-    set -euxo pipefail
-    VERSION="0.${BUILD_BUILDNUMBER}"
-    NAME="minprog"
-    helm package --version "${VERSION}" --app-version "${VERSION}" "charts/${NAME}"
-    helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
-    curl "https://k8s.datanose.nl/gitops-updater?name=proglab-prod&secret=${UPDATER_SECRET}&version=${VERSION}"
-  displayName: Build Helm chart and push to registry
-  env:
-    UPDATER_SECRET: $(DEPLOY_SECRET)
+  - script: |
+      set -euxo pipefail
+      VERSION="0.${BUILD_BUILDNUMBER}"
+      NAME="minprog"
+      helm package --version "${VERSION}" --app-version "${VERSION}" "charts/${NAME}"
+      helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
+      curl "https://k8s.datanose.nl/gitops-updater?name=proglab-prod&secret=${UPDATER_SECRET}&version=${VERSION}"
+    displayName: Build Helm chart and push to registry
+    env:
+      UPDATER_SECRET: $(DEPLOY_SECRET)
+
+- job: minprog_ide
+  steps:
+  - script: |
+      set -euxo pipefail
+      docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog-ide:latest" .
+      docker push "fnwicr.azurecr.io/minprog-ide:latest"
+    displayName: IDE - build Docker container
+    workingDirectory: ./ide
+
+  - script: |
+      set -euxo pipefail
+      VERSION="0.${BUILD_BUILDNUMBER}"
+      NAME="minprog-ide"
+      helm package --version "${VERSION}" --app-version "${VERSION}" "charts/${NAME}"
+      helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
+      curl "https://k8s.datanose.nl/gitops-updater?name=proglab-ide&secret=${UPDATER_SECRET}&version=${VERSION}"
+    displayName: IDE - build Helm chart and push to registry
+    env:
+      UPDATER_SECRET: $(DEPLOY_SECRET)
