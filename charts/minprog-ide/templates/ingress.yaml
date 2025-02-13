@@ -6,6 +6,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "{{ .Values.ingressClass }}"
     acme.cert-manager.io/http01-ingress-class: {{ .Values.ingressClass }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Cross-Origin-Opener-Policy: same-origin";
+      more_set_headers "Cross-Origin-Embedder-Policy: require-corp";
 spec:
   tls:
     - hosts:
