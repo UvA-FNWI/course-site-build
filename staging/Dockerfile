@@ -1,4 +1,4 @@
-FROM phusion/passenger-ruby32:3.1.1
+FROM phusion/passenger-ruby32:3.1.2
 
 # System update and application dependencies
 RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
