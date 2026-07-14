@@ -1,6 +1,6 @@
 hostname: hands.local
 ingressClass: nginx
-image: fnwicr.azurecr.io/hands
+image: fnwicr.azurecr.io/minprog-hands
 tag: latest
 
 secretKeyBase: secret
