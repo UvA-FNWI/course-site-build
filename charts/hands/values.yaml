@@ -1,0 +1,35 @@
+hostname: hands.local
+ingressClass: nginx
+image: fnwicr.azurecr.io/hands
+tag: latest
+
+secretKeyBase: secret
+
+oidc:
+  clientId: hands.local
+  host: connect.test.surfconext.nl
+
+mail:
+  address: smtp.example.com
+  domain: domain.example
+  from: mail@example.nl
+
+database:
+  name: dbname
+  user: user
+  url: postgres://url
+
+azure:
+  keyvaultName: keyvaultName
+  resourceGroup: resourceGroupName
+  subscriptionId: subscriptionId
+  tenantId: tenantId
+  clientId: clientId
+  identityName: identityName
+  secrets:
+    - name: hands-db-password
+      key: DATABASE_PASSWORD
+    - name: hands-oidc-secret
+      key: OIDC_CLIENT_SECRET
+    - name: hands-secretbase
+      key: SECRET_KEY_BASE
