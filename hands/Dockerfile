@@ -16,7 +16,12 @@ WORKDIR /rails
 
 # Clone sources
 ADD "https://api.github.com/repos/stgm/hands/commits/main" last-commit
-RUN git clone --branch main --depth 1 https://github.com/stgm/hands.git
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y git ca-certificates && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives && \
+    git clone --branch main --depth 1 https://github.com/stgm/hands.git /tmp/hands && \
+    cp -a /tmp/hands/. /rails/ && \
+    rm -rf /tmp/hands
 
 # Install base packages
 RUN apt-get update -qq && \
@@ -40,23 +45,19 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
-COPY vendor/* ./vendor/
-COPY Gemfile Gemfile.lock ./
-
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
     bundle exec bootsnap precompile -j 1 --gemfile
-
-# Copy application code
-COPY . .
 
 # Precompile bootsnap code for faster boot times.
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 \
+    DATABASE_HOST=localhost DATABASE_NAME=dummy DATABASE_USER=dummy DATABASE_PASSWORD=dummy \
+    ./bin/rails assets:precompile
 
 
 
