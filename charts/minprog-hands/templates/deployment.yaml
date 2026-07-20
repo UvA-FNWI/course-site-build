@@ -22,8 +22,13 @@ spec:
           image: "{{ .Values.image }}:{{ .Values.tag }}"
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
+            # Override HTTP_PORT and TARGET_PORT for server
+            - name: HTTP_PORT
+              value: "3000"
+            - name: TARGET_PORT
+              value: "3001"
             - name: HANDS_DEPLOYMENT_VERSION
               value: "{{ .Chart.AppVersion }}"
             - name: HANDS_DEPLOYMENT_VERSION_TAG
