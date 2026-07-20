@@ -1,6 +1,6 @@
 apiVersion: v2
-name: hands
-description: Hands
+name: minprog-hands
+description: Programming Lab Hands App
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
