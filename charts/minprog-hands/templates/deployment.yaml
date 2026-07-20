@@ -37,6 +37,11 @@ spec:
               value: production
             - name: RAILS_LOG_TO_STDOUT
               value: "true"
+            # Run the Solid Queue supervisor inside Puma (needs single replica!)
+            - name: SOLID_QUEUE_IN_PUMA
+              value: "true"
+            - name: APP_HOST
+              value: "{{ .Values.hostname }}"
             - name: OIDC_HOST
               value: "{{ .Values.oidc.host }}"
             - name: OIDC_CLIENT_ID
