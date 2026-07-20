@@ -27,9 +27,9 @@ azure:
   clientId: clientId
   identityName: identityName
   secrets:
-    - name: hands-db-password
+    - name: minprog-db-password
       key: DATABASE_PASSWORD
-    - name: hands-oidc-secret
+    - name: minprog-oidc-secret
       key: OIDC_CLIENT_SECRET
-    - name: hands-secretbase
+    - name: minprog-secretbase
       key: SECRET_KEY_BASE
