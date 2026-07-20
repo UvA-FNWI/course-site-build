@@ -48,3 +48,23 @@ jobs:
     displayName: IDE - build Helm chart and push to registry
     env:
       UPDATER_SECRET: $(DEPLOY_SECRET)
+
+- job: hands
+  steps:
+  - script: |
+      set -euxo pipefail
+      docker build -f Dockerfile -t "fnwicr.azurecr.io/minprog-hands:latest" .
+      docker push "fnwicr.azurecr.io/minprog-hands:latest"
+    displayName: Build Docker container
+    workingDirectory: ./hands
+
+  - script: |
+      set -euxo pipefail
+      VERSION="0.${BUILD_BUILDNUMBER}"
+      NAME="minprog-hands"
+      helm package --version "${VERSION}" --app-version "${VERSION}" "charts/${NAME}"
+      helm push "${NAME}-${VERSION}.tgz" oci://fnwicr.azurecr.io/helm
+      curl "https://k8s.datanose.nl/gitops-updater?name=proglab-hands&secret=${UPDATER_SECRET}&version=${VERSION}"
+    displayName: Build Helm chart and push to registry
+    env:
+      UPDATER_SECRET: $(DEPLOY_SECRET)
