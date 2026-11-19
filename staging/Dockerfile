@@ -1,14 +1,19 @@
-FROM phusion/passenger-ruby40:3.1.11
+ARG RUBY_VERSION=4.0.10
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-# System update and application dependencies
-RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
-RUN apt-get -y install libcurl4-openssl-dev libvips mupdf imagemagick
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# System packages for building and running the application and Passenger
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+      build-essential ca-certificates curl git imagemagick libcurl4-openssl-dev \
+      libssl-dev libvips libyaml-dev mupdf pkg-config sqlite3 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 
 # Application will be run as non-root user
+RUN groupadd --system --gid 1000 app && \
+    useradd app --uid 1000 --gid 1000 --create-home --shell /bin/bash
 USER app
 
 # Get application from public repository
