@@ -5,7 +5,7 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential ca-certificates curl git imagemagick libcurl4-openssl-dev \
-      libssl-dev libvips libyaml-dev mupdf pkg-config sqlite3 && \
+      libssl-dev libvips libyaml-dev mupdf pkg-config procps sqlite3 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV RAILS_ENV=production
