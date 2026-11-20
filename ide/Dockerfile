@@ -1,4 +1,4 @@
-FROM nginx:1.31.2-alpine
+FROM nginx:1.31.9-alpine
 
 RUN apk add --no-cache git
 RUN echo "types { text/javascript mjs; }" > /etc/nginx/conf.d/mjs.conf
