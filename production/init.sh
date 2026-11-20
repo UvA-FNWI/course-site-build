@@ -7,4 +7,4 @@ bin/rails db:prepare
 bin/jobs &
 
 # start application server
-passenger start
+passenger start --nginx-version 1.30.7

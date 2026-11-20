@@ -5,7 +5,7 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential ca-certificates curl git imagemagick libcurl4-openssl-dev \
-      libssl-dev libvips libyaml-dev mupdf pkg-config procps sqlite3 && \
+      libpcre2-dev libssl-dev libvips libyaml-dev mupdf pkg-config procps sqlite3 zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV RAILS_ENV=production
@@ -18,7 +18,7 @@ USER app
 
 # Install Passenger and download its standalone server runtime
 RUN gem install passenger --no-document && \
-    passenger-config install-standalone-runtime --auto && \
+    passenger-config install-standalone-runtime --auto --nginx-version=1.30.7 && \
     passenger-config build-native-support
 
 # Get application from public repository
